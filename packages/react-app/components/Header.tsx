@@ -1,5 +1,5 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon, ShoppingCartIcon, QuestionMarkCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ export default function Header() {
       setHideConnectBtn(true);
       connect({ connector: injected({ target: "metaMask" }) });
     }
-  }, []);
+  }, [connect]);
 
   return (
     <>
@@ -88,6 +88,35 @@ export default function Header() {
           </>
         )}
       </Disclosure>
+
+      {/* Search, Help, and Cart Section */}
+      <div className="bg-gray-800 py-2">
+        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            {/* Search Bar */}
+            <div className="flex items-center bg-gray-700 text-white rounded-md p-2">
+              <MagnifyingGlassIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+              <input
+                type="text"
+                placeholder="Search"
+                className="bg-gray-700 text-white focus:outline-none"
+              />
+            </div>
+            {/* Help Icon */}
+            <div className="flex items-center">
+              <a href="#" className="text-white p-2">
+                <QuestionMarkCircleIcon className="h-6 w-6" aria-hidden="true" />
+                <span className="sr-only">Help</span>
+              </a>
+              {/* Cart Icon */}
+              <a href="#" className="text-white p-2">
+                <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+                <span className="sr-only">Cart</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
