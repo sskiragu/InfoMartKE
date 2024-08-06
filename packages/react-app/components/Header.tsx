@@ -20,19 +20,19 @@ export default function Header() {
   return (
     <>
       {/* Top Banner */}
-      <div className="bg-gray-800 text-white py-2 text-center">
+      <div className="bg-red-800 text-white py-2 text-center">
         <p className="text-sm sm:text-base">
           Welcome to InfoMartKE - Your destination for IT products and services!
         </p>
       </div>
-      <Disclosure as="nav" className="bg-gray-900 border-b border-red-600">
+      <Disclosure as="nav" className="bg-white border-b border-gray-300">
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
               <div className="relative flex h-16 justify-between">
                 <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                   {/* Mobile menu button */}
-                  <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-white focus:outline-none focus:ring-1 focus:ring-inset focus:rounded-none focus:ring-red-600">
+                  <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-gray-800 focus:outline-none focus:ring-1 focus:ring-inset focus:rounded-none focus:ring-gray-600">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -54,7 +54,7 @@ export default function Header() {
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <a
                       href="#"
-                      className="inline-flex items-center border-b-2 border-red-600 px-1 pt-1 text-sm font-medium text-white"
+                      className="inline-flex items-center border-b-2 border-gray-300 px-1 pt-1 text-sm font-medium text-gray-800"
                     >
                       Home
                     </a>
@@ -78,7 +78,7 @@ export default function Header() {
                 <DisclosureButton
                   as="a"
                   href="#"
-                  className="block border-l-4 border-red-600 py-2 pl-3 pr-4 text-base font-medium text-white"
+                  className="block border-l-4 border-gray-300 py-2 pl-3 pr-4 text-base font-medium text-gray-800"
                 >
                   Home
                 </DisclosureButton>
