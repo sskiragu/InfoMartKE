@@ -5,10 +5,12 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
+import { useCart } from '../contexts/CartContext'; // Import useCart hook
 
 export default function Header() {
   const [hideConnectBtn, setHideConnectBtn] = useState(false);
   const { connect } = useConnect();
+  const { toggleCart } = useCart(); // Use the useCart hook
 
   useEffect(() => {
     if (window.ethereum && window.ethereum.isMiniPay) {
@@ -63,18 +65,40 @@ export default function Header() {
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   {!hideConnectBtn && (
                     <ConnectButton
-                      showBalance={{
-                        smallScreen: true,
-                        largeScreen: false,
-                      }}
+                      accountStatus={{ smallScreen: "avatar", largeScreen: "full" }}
+                      showBalance={{ smallScreen: false, largeScreen: true }}
                     />
                   )}
+                  <button
+                    type="button"
+                    className="rounded-full bg-white p-1 text-gray-800 hover:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-600"
+                  >
+                    <span className="sr-only">View notifications</span>
+                    <ShoppingCartIcon
+                      className="h-6 w-6"
+                      aria-hidden="true"
+                      onClick={toggleCart} // Toggle cart visibility
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-full bg-white p-1 text-gray-800 hover:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-600"
+                  >
+                    <span className="sr-only">View help</span>
+                    <QuestionMarkCircleIcon className="h-6 w-6" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="rounded-full bg-white p-1 text-gray-800 hover:text-gray-600 focus:outline-none focus:ring-1 focus:ring-gray-600"
+                  >
+                    <span className="sr-only">Search</span>
+                    <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
+                  </button>
                 </div>
               </div>
             </div>
-
             <DisclosurePanel className="sm:hidden">
-              <div className="space-y-1 pt-2 pb-4">
+              <div className="space-y-1 pt-2 pb-3">
                 <DisclosureButton
                   as="a"
                   href="#"
@@ -82,41 +106,11 @@ export default function Header() {
                 >
                   Home
                 </DisclosureButton>
-                {/* Add here your custom menu elements */}
               </div>
             </DisclosurePanel>
           </>
         )}
       </Disclosure>
-
-      {/* Search, Help, and Cart Section */}
-      <div className="bg-gray-800 py-2">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Search Bar */}
-            <div className="flex items-center bg-gray-700 text-white rounded-md p-2">
-              <MagnifyingGlassIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-              <input
-                type="text"
-                placeholder="Search"
-                className="bg-gray-700 text-white focus:outline-none"
-              />
-            </div>
-            {/* Help Icon */}
-            <div className="flex items-center">
-              <a href="#" className="text-white p-2">
-                <QuestionMarkCircleIcon className="h-6 w-6" aria-hidden="true" />
-                <span className="sr-only">Help</span>
-              </a>
-              {/* Cart Icon */}
-              <a href="#" className="text-white p-2">
-                <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
-                <span className="sr-only">Cart</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 }
