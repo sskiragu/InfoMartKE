@@ -1,44 +1,78 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import Product from '../../../models/product';
 
-// Mock data storage for demonstration purposes
-let products = [
-  { id: 1, name: 'Product 1', description: 'Description for Product 1', quantity: 10, price: 100, imageUrl: 'https://images.pexels.com/photos/6446709/pexels-photo-6446709.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
-  { id: 2, name: 'Product 2', description: 'Description for Product 2', quantity: 5, price: 200, imageUrl: 'https://images.pexels.com/photos/6446709/pexels-photo-6446709.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
-];
-
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'GET':
-      // Handle GET request
-      res.status(200).json(products);
+      try {
+        const products = await Product.findAll();
+        res.status(200).json(products);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch products' });
+      }
       break;
 
     case 'POST':
-      // Handle POST request
-      const newProduct = req.body;
-      newProduct.id = products.length + 1; // Simple ID assignment for example purposes
-      products.push(newProduct);
-      res.status(201).json(newProduct);
+      const { name, description, quantity, price, imageUrl } = req.body;
+
+      if (!name || !description || !quantity || !price || !imageUrl) {
+        return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      try {
+        const newProduct = await Product.create({ name, description, quantity, price, imageUrl });
+        res.status(201).json(newProduct);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to create product' });
+      }
       break;
 
     case 'PUT':
-      // Handle PUT request
-      const updatedProduct = req.body;
-      products = products.map(product =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      );
-      res.status(200).json(updatedProduct);
+      const updatedProductData = req.body;
+
+      if (!updatedProductData.id || !updatedProductData.name || !updatedProductData.description || !updatedProductData.quantity || !updatedProductData.price || !updatedProductData.imageUrl) {
+        return res.status(400).json({ error: 'All fields are required' });
+      }
+
+      try {
+        const [updatedRows] = await Product.update(updatedProductData, {
+          where: { id: updatedProductData.id }
+        });
+
+        if (updatedRows === 0) {
+          return res.status(404).json({ error: 'Product not found' });
+        }
+
+        const updatedProduct = await Product.findByPk(updatedProductData.id);
+        res.status(200).json(updatedProduct);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to update product' });
+      }
       break;
 
     case 'DELETE':
-      // Handle DELETE request
       const { id } = req.query;
-      products = products.filter(product => product.id !== parseInt(id as string));
-      res.status(204).end();
+
+      if (!id || typeof id !== 'string') {
+        return res.status(400).json({ error: 'Invalid product ID' });
+      }
+
+      try {
+        const deletedRows = await Product.destroy({
+          where: { id: parseInt(id, 10) }
+        });
+
+        if (deletedRows === 0) {
+          return res.status(404).json({ error: 'Product not found' });
+        }
+
+        res.status(204).end();
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to delete product' });
+      }
       break;
 
     default:
-      // Handle any other HTTP method
       res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
       break;
