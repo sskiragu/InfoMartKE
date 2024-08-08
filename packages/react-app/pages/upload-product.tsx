@@ -16,7 +16,7 @@ export default function UploadProduct() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetch('/api/upload-product', {
+    const response = await fetch('http://localhost:3000/api/products/route', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
