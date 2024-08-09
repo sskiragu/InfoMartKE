@@ -14,7 +14,7 @@ interface CartContextType {
   decreaseQuantity: (product: Product) => void;
   clearCart: () => void;
   closeCart: () => void;
-  checkout: () => void;
+  checkout: (paymentMethod: string) => void;
   isCartOpen: boolean;
   toggleCart: () => void;
   totalPrice: number;
@@ -69,10 +69,19 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setIsCartOpen(false);
   };
 
-  const checkout = () => {
-    // Implement checkout logic
-    alert('Proceeding to checkout...');
+  const checkout = (paymentMethod: string) => {
+    // Implement the logic for each payment method
+    if (paymentMethod === 'cUSD') {
+      // Handle cUSD payment
+    } else if (paymentMethod === 'Mpesa') {
+      // Handle Mpesa payment
+    } else if (paymentMethod === 'MasterCard') {
+      // Handle MasterCard payment
+    }
+    clearCart();
+    closeCart();
   };
+
 
   const toggleCart = () => {
     setIsCartOpen(!isCartOpen);
