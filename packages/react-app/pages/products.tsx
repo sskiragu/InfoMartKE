@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useCart } from '../contexts/CartContext';
 import { Product } from '@/types';
+import PaymentModal from '../components/PaymentModal'; // Adjust the import path as needed
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const { cart, addToCart, removeFromCart, increaseQuantity, decreaseQuantity, clearCart, checkout, toggleCart, isCartOpen, totalPrice } = useCart();
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -16,6 +18,10 @@ export default function ProductsPage() {
 
     fetchProducts();
   }, []);
+
+  const handleCheckout = (paymentMethod: string) => {
+    checkout(paymentMethod);
+  };
 
   return (
     <div className="container mx-auto py-8">
@@ -88,7 +94,7 @@ export default function ProductsPage() {
                 <button onClick={clearCart} className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">
                   Clear Cart
                 </button>
-                <button onClick={checkout} className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 ml-2">
+                <button onClick={() => setIsPaymentModalOpen(true)} className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 ml-2">
                   Checkout
                 </button>
               </div>
@@ -99,6 +105,12 @@ export default function ProductsPage() {
           </div>
         </div>
       )}
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onConfirm={handleCheckout}
+      />
     </div>
   );
 }
