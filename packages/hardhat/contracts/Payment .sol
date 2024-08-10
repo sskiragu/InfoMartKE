@@ -12,6 +12,7 @@ contract Payment {
         address payer;
         uint256 amount;
         uint256 timestamp;
+        string productId; // Add productId if needed
     }
 
     mapping(uint256 => Transaction) public transactions;
@@ -25,13 +26,21 @@ contract Payment {
         _;
     }
 
-    function pay() external payable {
+    function pay(string memory productId) external payable {
         require(msg.value > 0, "Payment amount must be greater than zero");
 
         transactionCount++;
-        transactions[transactionCount] = Transaction(msg.sender, msg.value, block.timestamp);
+        transactions[transactionCount] = Transaction({
+            payer: msg.sender,
+            amount: msg.value,
+            timestamp: block.timestamp,
+            productId: productId
+        });
 
         emit PaymentReceived(msg.sender, msg.value, transactionCount);
+
+        // You can call an off-chain API from the contract using Chainlink or another oracle
+        // Note: Directly calling an external API from the smart contract is not possible
     }
 
     function withdraw(uint256 amount) external onlyOwner {
