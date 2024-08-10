@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useCart } from '../contexts/CartContext';
 import { Product } from '@/types';
-import PaymentModal from '../components/PaymentModal'; // Adjust the import path as needed
+import PaymentModal from '../components/PaymentModal'; // Ensure this path is correct
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -109,7 +109,7 @@ export default function ProductsPage() {
       <PaymentModal
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
-        onConfirm={handleCheckout}
+        onConfirm={handleCheckout} // Use onConfirm prop
       />
     </div>
   );
